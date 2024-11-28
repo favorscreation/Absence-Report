@@ -5,110 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>欠席・遅刻・早退 連絡票</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="scripts.js" defer></script>
 </head>
 <body>
 
 <div class="container">
     <h1>欠席・遅刻・早退 連絡票</h1>
-    <form action="/submit" method="post">
+    <div class="deployment-id">
+        <label for="deploymentId">GASデプロイID：</label>
+        <input type="text" id="deploymentId" name="deploymentId" placeholder="デプロイIDを入力" required>
+    </div>
+    <form id="attendanceForm" method="post">
         <div class="form-group">
-            <label for="担当者">担当者：</label>
-            <input type="text" id="担当者" name="担当者" required>
+            <label for="responsiblePerson">担当者：</label>
+            <input type="text" id="responsiblePerson" name="responsiblePerson" placeholder="例: 山田太郎" required>
         </div>
         <div class="form-group">
-            <label for="利用者氏名">利用者氏名：</label>
-            <input type="text" id="利用者氏名" name="利用者氏名" required>
+            <label for="userName">利用者氏名：</label>
+            <input type="text" id="userName" name="userName" placeholder="例: 佐藤花子" required>
         </div>
         <div class="form-group">
-            <label for="連絡日時">連絡日時：</label>
-            <input type="datetime-local" id="連絡日時" name="連絡日時" required>
+            <label for="contactDateTime">連絡日時：</label>
+            <input type="datetime-local" id="contactDateTime" name="contactDateTime" required style="width: 180px;">
         </div>
         <div class="form-group">
-            <label for="連絡者">連絡者：</label>
-            <select id="連絡者" name="連絡者" required>
+            <label for="contactPerson">連絡者：</label>
+            <select id="contactPerson" name="contactPerson" required>
                 <option value="本人" selected>本人</option>
                 <option value="家族">家族</option>
                 <option value="その他">その他</option>
             </select>
-            <input type="text" id="その他連絡者" name="その他連絡者" style="display:none;" placeholder="その他の連絡者">
+            <input type="text" id="otherContactPerson" name="otherContactPerson" style="display:none;" placeholder="その他の連絡者">
         </div>
         <div class="form-group">
-            <label for="連絡方法">連絡方法：</label>
+            <label for="contactMethod">連絡方法：</label>
             <div class="radio-group">
-                <label><input type="radio" id="電話" name="連絡方法" value="電話" required checked>電話</label>
-                <label><input type="radio" id="口頭" name="連絡方法" value="口頭" required>口頭</label>
-                <label><input type="radio" id="メール" name="連絡方法" value="メール" required>メール</label>
-                <label><input type="radio" id="チャット" name="連絡方法" value="チャット" required>チャット</label>
-                <label><input type="radio" id="その他" name="連絡方法" value="その他" required>その他</label>
+                <label><input type="radio" id="電話" name="contactMethod" value="電話" required checked>電話</label>
+                <label><input type="radio" id="口頭" name="contactMethod" value="口頭" required>口頭</label>
+                <label><input type="radio" id="メール" name="contactMethod" value="メール" required>メール</label>
+                <label><input type="radio" id="チャット" name="contactMethod" value="チャット" required>チャット</label>
+                <label><input type="radio" id="その他" name="contactMethod" value="その他" required>その他</label>
             </div>
         </div>
         <div class="form-group">
-            <label for="種別">種別：</label>
-            <select id="種別" name="種別" required>
+            <label for="category">種別：</label>
+            <select id="category" name="category" required>
                 <option value="欠席" selected>欠席</option>
                 <option value="遅刻">遅刻</option>
                 <option value="早退">早退</option>
             </select>
         </div>
         <div class="form-group">
-            <label for="事由">事由：</label>
+            <label for="reason">事由：</label>
             <div class="radio-group">
-                <label><input type="radio" id="体調不良" name="事由" value="体調不良" required checked>体調不良</label>
-                <label><input type="radio" id="一般通院" name="事由" value="一般通院" required>一般通院</label>
-                <label><input type="radio" id="その他" name="事由" value="その他" required>その他</label>
+                <label><input type="radio" id="体調不良" name="reason" value="体調不良" required checked>体調不良</label>
+                <label><input type="radio" id="一般通院" name="reason" value="一般通院" required>一般通院</label>
+                <label><input type="radio" id="その他" name="reason" value="その他" required>その他</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="startDateTime">開始日時：</label>
+            <input type="datetime-local" id="startDateTime" name="startDateTime" required style="width: 180px;">
+        </div>
+        <div class="form-group">
+            <label for="endDateTime">終了日時：</label>
+            <input type="datetime-local" id="endDateTime" name="endDateTime" required style="width: 180px;">
+        </div>
+        <div class="group">
+            <div class="form-group">
+                <label for="startTime">時刻：</label>
+                <input type="time" id="startTime" name="startTime">
+            </div>
+            <div class="form-group">
+                <label for="supportAdvice1">相談支援・助言1：</label>
+                <textarea id="supportAdvice1" name="supportAdvice1" placeholder="例: 体調管理に注意するように助言"></textarea>
             </div>
         </div>
         <div class="group">
             <div class="form-group">
-                <label for="開始日時">開始日時：</label>
-                <input type="date" id="開始日時" name="開始日時" required>
+                <label for="endTime">時刻：</label>
+                <input type="time" id="endTime" name="endTime">
             </div>
             <div class="form-group">
-                <label for="終了日時">終了日時：</label>
-                <input type="date" id="終了日時" name="終了日時">
-            </div>
-        </div>
-        <div class="group">
-            <div class="form-group">
-                <label for="始業時刻">時刻：</label>
-                <input type="time" id="始業時刻" name="始業時刻">
-            </div>
-            <div class="form-group">
-                <label for="始業時相談支援助言">始業時の相談支援・助言：</label>
-                <textarea id="始業時相談支援助言" name="始業時相談支援助言"></textarea>
-            </div>
-        </div>
-        <div class="group">
-            <div class="form-group">
-                <label for="就業時刻">時刻：</label>
-                <input type="time" id="就業時刻" name="就業時刻">
-            </div>
-            <div class="form-group">
-                <label for="就業時相談支援助言">就業時の相談支援・助言：</label>
-                <textarea id="就業時相談支援助言" name="就業時相談支援助言"></textarea>
+                <label for="supportAdvice2">相談支援・助言2：</label>
+                <textarea id="supportAdvice2" name="supportAdvice2" placeholder="例: 次回の通院日を確認"></textarea>
             </div>
         </div>
         <div class="form-group">
-            <label for="当日の状況">当日の状況：</label>
-            <textarea id="当日の状況" name="当日の状況" required></textarea>
+            <label for="currentSituation">当日の状況：</label>
+            <textarea id="currentSituation" name="currentSituation" placeholder="例: 朝から微熱が続いている" required></textarea>
         </div>
         <div class="form-group">
-            <label for="次回通所日">次回通所日：</label>
-            <input type="date" id="次回通所日" name="次回通所日" required>
+            <label for="nextVisitDate">次回通所日：</label>
+            <input type="date" id="nextVisitDate" name="nextVisitDate" required>
         </div>
         <div class="form-group">
-            <label for="加算の有無">加算の有無：</label>
-            <select id="加算の有無" name="加算の有無" required>
+            <label for="additionalSupport">加算の有無：</label>
+            <select id="additionalSupport" name="additionalSupport" required>
                 <option value="" disabled selected>選択してください</option>
                 <option value="有">有</option>
                 <option value="無">無</option>
             </select>
         </div>
         <div class="form-group">
-            <label for="昼食キャンセル負担">昼食キャンセル負担：</label>
-            <select id="昼食キャンセル負担" name="昼食キャンセル負担" required>
+            <label for="lunchCancel">昼食キャンセル負担：</label>
+            <select id="lunchCancel" name="lunchCancel" required>
                 <option value="" disabled selected>選択してください</option>
                 <option value="有">有</option>
                 <option value="無">無</option>
@@ -119,9 +120,6 @@
         </div>
     </form>
 </div>
-
-<script src="scripts.js"></script>
-<script src="extra.js"></script>
 
 </body>
 </html>
