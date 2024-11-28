@@ -86,7 +86,7 @@ h1 {
 }
 
 .group {
-    margin-bottom: 20px;
+    margin: 20px 0;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -94,14 +94,17 @@ h1 {
 }
 
 .radio-group {
+    display: table-row-group;
     gap: 10px;
     align-items: center;
-    flex-wrap: nowrap;
-    overflow-x: auto;
 }
 
 .radio-group label {
     white-space: nowrap;
+}
+
+.radio-group input[type="radio"]:checked + label {
+    color: #4CAF50; /* 選択されたラジオボタンのラベル色 */
 }
 
 button {
