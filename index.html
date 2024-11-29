@@ -11,10 +11,6 @@
 
 <div class="container">
     <h1>欠席・遅刻・早退 連絡票</h1>
-    <div class="deployment-id">
-        <label for="deploymentId">GASデプロイID：</label>
-        <input type="text" id="deploymentId" name="deploymentId" placeholder="デプロイIDを入力" required>
-    </div>
     <form id="attendanceForm" method="post">
         <div class="form-group">
             <label for="responsiblePerson">担当者：</label>
@@ -24,9 +20,9 @@
             <label for="userName">利用者氏名：</label>
             <input type="text" id="userName" name="userName" placeholder="例: 佐藤花子" required>
         </div>
-        <div class="form-group">
+         <div class="form-group">
             <label for="contactDateTime">連絡日時：</label>
-            <input type="datetime-local" id="contactDateTime" name="contactDateTime" required style="width: 180px;">
+            <input type="datetime-local" id="contactDateTime" name="contactDateTime" required>
         </div>
         <div class="form-group">
             <label for="contactPerson">連絡者：</label>
@@ -40,11 +36,11 @@
         <div class="form-group">
             <label for="contactMethod">連絡方法：</label>
             <div class="radio-group">
-                <label><input type="radio" id="contactMethod_phone" name="contactMethod" value="電話" required checked>電話</label>
-                <label><input type="radio" id="contactMethod_oral" name="contactMethod" value="口頭" required>口頭</label>
-                <label><input type="radio" id="contactMethod_email" name="contactMethod" value="メール" required>メール</label>
-                <label><input type="radio" id="contactMethod_chat" name="contactMethod" value="チャット" required>チャット</label>
-                <label><input type="radio" id="contactMethod_other" name="contactMethod" value="その他" required>その他</label>
+                <label><input type="radio" name="contactMethod" value="電話" required checked>電話</label>
+                <label><input type="radio" name="contactMethod" value="口頭" required>口頭</label>
+                <label><input type="radio" name="contactMethod" value="メール" required>メール</label>
+                <label><input type="radio" name="contactMethod" value="チャット" required>チャット</label>
+                <label><input type="radio" name="contactMethod" value="その他" required>その他</label>
             </div>
         </div>
         <div class="form-group">
@@ -58,18 +54,18 @@
         <div class="form-group">
             <label for="reason">事由：</label>
             <div class="radio-group">
-                <label><input type="radio" id="reason_illness" name="reason" value="体調不良" required checked>体調不良</label>
-                <label><input type="radio" id="reason_general" name="reason" value="一般通院" required>一般通院</label>
-                <label><input type="radio" id="reason_other" name="reason" value="その他" required>その他</label>
+                <label><input type="radio" name="reason" value="体調不良" required checked>体調不良</label>
+                <label><input type="radio" name="reason" value="一般通院" required>一般通院</label>
+                <label><input type="radio" name="reason" value="その他" required>その他</label>
             </div>
         </div>
         <div class="form-group">
             <label for="startDateTime">開始日時：</label>
-            <input type="datetime-local" id="startDateTime" name="startDateTime" required style="width: 180px;">
+            <input type="datetime-local" id="startDateTime" name="startDateTime" required>
         </div>
         <div class="form-group">
             <label for="endDateTime">終了日時：</label>
-            <input type="datetime-local" id="endDateTime" name="endDateTime" required style="width: 180px;">
+            <input type="datetime-local" id="endDateTime" name="endDateTime" required>
         </div>
         <div class="group">
             <div class="form-group">
@@ -102,15 +98,16 @@
         <div class="form-group">
             <label for="additionalSupport">加算の有無：</label>
             <div class="radio-group">
-                <label><input type="radio" id="additionalSupport_yes" name="additionalSupport" value="有" required>有</label>
-                <label><input type="radio" id="additionalSupport_no" name="additionalSupport" value="無" required>無</label>
+                <label><input type="radio" name="additionalSupport" value="有" required>有</label>
+                <label><input type="radio" name="additionalSupport" value="無" required checked>無</label>
             </div>
         </div>
         <div class="form-group">
             <label for="lunchCancel">昼食キャンセル負担：</label>
             <div class="radio-group">
-                <label><input type="radio" id="lunchCancel_yes" name="lunchCancel" value="有" required>有</label>
-                <label><input type="radio" id="lunchCancel_no" name="lunchCancel" value="無" required>無</label>
+                <label><input type="radio" name="lunchCancel" value="有" required>有</label>
+                <label><input type="radio" name="lunchCancel" value="無" required checked>無</label>
+
             </div>
         </div>
         <div class="form-group">
