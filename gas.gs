@@ -1,5 +1,9 @@
 function doGet(e) {
-  return ContentService.createTextOutput(JSON.stringify({status: "OK"})).setMimeType(ContentService.MimeType.JSON);
+  if (e.parameter.spreadsheetId) {
+    return getSpreadsheetName(e.parameter.spreadsheetId);
+  }
+  
+  return ContentService.createTextOutput(JSON.stringify({ status: "OK" })).setMimeType(ContentService.MimeType.JSON);
 }
 
 function doPost(e) {
@@ -9,6 +13,16 @@ function doPost(e) {
   const identifierType = requestBody.sheetType;
 
   return doPostLibrary(requestBody, spreadsheetId, sheetIdentifier, identifierType);
+}
+
+function getSpreadsheetName(spreadsheetId) {
+  try {
+    const ss = SpreadsheetApp.openById(spreadsheetId);
+    const sheetName = ss.getName();
+    return ContentService.createTextOutput(JSON.stringify({ name: sheetName })).setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ error: error.message })).setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
 /**
@@ -105,7 +119,7 @@ function prepareDataForSpreadsheet(data) {
 
 // UUIDを生成する関数
 function generateUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
   });
