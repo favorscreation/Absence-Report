@@ -1,75 +1,72 @@
-//一意の送信識別子（UUID）を生成する関数。重複送信を防ぐために使用します。
-function generateUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
-
 function doGet(e) {
-  return HtmlService.createTemplateFromFile('index').evaluate();
+  return ContentService.createTextOutput(JSON.stringify({status: "OK"})).setMimeType(ContentService.MimeType.JSON);
 }
 
 function doPost(e) {
+  const requestBody = e.parameter;
+  const spreadsheetId = requestBody.spreadsheetsID;
+  const sheetIdentifier = requestBody.spreadsheetsGID;
+  const identifierType = requestBody.sheetType;
+
+  return doPostLibrary(requestBody, spreadsheetId, sheetIdentifier, identifierType);
+}
+
+/**
+ * 連絡票のデータをスプレッドシートに追加します。
+ *
+ * @param {Object} requestBody - リクエストボディの内容。
+ * @param {string} spreadsheetId - スプレッドシートID。
+ * @param {string} sheetIdentifier - シートGIDまたはシート名。
+ * @param {string} identifierType - シート識別子のタイプ ("gid" または "name")。
+ * @returns {Object} - 実行結果を含むオブジェクト。
+ */
+function doPostLibrary(requestBody, spreadsheetId, sheetIdentifier, identifierType) {
   try {
-    // スプレッドシートのIDとシートのGIDを設定
-    const sheetId = 'XXXXXXXXX'; // ここにシートIDを入力
-    const sheetGid = 'XXXXXXXXXX'; // ここにタブのGIDを入力
+    const ss = SpreadsheetApp.openById(spreadsheetId);
+    let sheet;
+    if (identifierType === 'gid') {
+      sheet = ss.getSheets().find(s => s.getSheetId() === parseInt(sheetIdentifier));
+    } else if (identifierType === 'name') {
+      sheet = ss.getSheetByName(sheetIdentifier);
+    } else {
+      throw new Error(`Invalid identifierType: ${identifierType}`);
+    }
 
-    // スプレッドシートと特定のシートを取得
-    const spreadsheet = SpreadsheetApp.openById(sheetId);
-    const sheet = spreadsheet.getSheets().find(sheet => sheet.getSheetId() === parseInt(sheetGid));
-
-    // フォームデータを取得
-    let data;
-    try {
-      data = JSON.parse(e.postData.contents);
-    } catch (parseError) {
-      throw new Error(`Invalid JSON data received: ${parseError.message}`);
+    if (!sheet) {
+      throw new Error(`Sheet not found: ${sheetIdentifier} (${identifierType})`);
     }
 
     // データにUUIDが含まれていない場合は、UUIDを生成します。
-    const submissionUUID = data.submissionUUID || generateUUID();
-    data.submissionUUID = submissionUUID;
+    const submissionUUID = requestBody.submissionUUID || generateUUID();
+    requestBody.submissionUUID = submissionUUID;
 
-
-    // UUIDを格納するためのシート（Submissions）を作成します。
-    const uuidSheet = spreadsheet.getSheetByName("Submissions");
+    // UUIDを格納するためのシート（Submissions）を作成または取得します。
+    let uuidSheet = ss.getSheetByName("Submissions");
     if (!uuidSheet) {
-        spreadsheet.insertSheet("Submissions");
-        uuidSheet = spreadsheet.getSheetByName("Submissions");
-        uuidSheet.appendRow(['Submission UUID']);
+      uuidSheet = ss.insertSheet("Submissions");
+      uuidSheet.appendRow(['Submission UUID']);
     }
 
     // 重複送信をチェックします。SubmissionsシートにUUIDが既に存在する場合は、重複送信とみなします。
-    if(uuidSheet.getRange("A1:A").getValues().flat().includes(submissionUUID)) {
-        Logger.log("重複送信が検出されました！");
-        return ContentService.createTextOutput(JSON.stringify({ result: 'duplicate' })).setMimeType(ContentService.MimeType.JSON);
+    const uuidRange = uuidSheet.getRange("A1:A").getValues().flat();
+    if (uuidRange.includes(submissionUUID)) {
+      Logger.log("重複送信が検出されました！");
+      return ContentService.createTextOutput(JSON.stringify({ result: 'duplicate' })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    Logger.log(data); // ログ出力でデバッグ
+    writeHeaderRowIfNeeded(sheet); // ヘッダー行を追加
+    sheet.appendRow(prepareDataForSpreadsheet(requestBody)); // データをシートに追加
+    uuidSheet.appendRow([submissionUUID]); // UUIDを記録
 
-
-    // 1行目が空の場合、列名を設定
-    writeHeaderRowIfNeeded(sheet);
-
-    // スプレッドシートに新しいデータを最終行に追加
-    sheet.appendRow(prepareDataForSpreadsheet(data));
-
-    // UUIDをSubmissionsシートに追加します。
-    uuidSheet.appendRow([submissionUUID]);
-
-
-    // レスポンスを返す
     return ContentService.createTextOutput(JSON.stringify({ result: 'success' })).setMimeType(ContentService.MimeType.JSON);
 
   } catch (error) {
-    Logger.log(error); // エラーログ出力
+    Logger.log(`ライブラリ内でエラーが発生しました: ${error}`); // エラーログ出力
     return ContentService.createTextOutput(JSON.stringify({ result: 'error', message: error.message })).setMimeType(ContentService.MimeType.JSON);
   }
 }
 
-// ヘッダー行を書き込むヘルパー関数。ヘッダー行が存在しない場合にのみ実行します。
+// ヘッダー行を書き込むヘルパー関数
 function writeHeaderRowIfNeeded(sheet) {
   if (sheet.getRange(1, 1).isBlank()) {
     const headerRow = [
@@ -81,26 +78,35 @@ function writeHeaderRowIfNeeded(sheet) {
   }
 }
 
+// スプレッドシートに書き込むデータ配列を作成するヘルパー関数
 function prepareDataForSpreadsheet(data) {
-    return [
-        data.responsiblePerson || '',
-        data.userName || '',
-        data.contactDateTime || '',
-        data.contactPerson || '',
-        data.otherContactPerson || '',
-        data.contactMethod || '',
-        data.category || '',
-        data.reason || '',
-        data.startDateTime || '',
-        data.endDateTime || '',
-        data.supportTime1 || '',
-        data.supportAdvice1 || '',
-        data.supportTime2 || '',
-        data.supportAdvice2 || '',
-        data.currentSituation || '',
-        data.nextVisitDate || '',
-        data.additionalSupport || '',
-        data.lunchCancel || '',
-        data.submissionUUID || ''
-    ];
+  return [
+    data.responsiblePerson || '',
+    data.userName || '',
+    data.contactDateTime || '',
+    data.contactPerson || '',
+    data.otherContactPerson || '',
+    data.contactMethod || '',
+    data.category || '',
+    data.reason || '',
+    data.startDateTime || '',
+    data.endDateTime || '',
+    data.supportTime1 || '',
+    data.supportAdvice1 || '',
+    data.supportTime2 || '',
+    data.supportAdvice2 || '',
+    data.currentSituation || '',
+    data.nextVisitDate || '',
+    data.additionalSupport || '',
+    data.lunchCancel || '',
+    data.submissionUUID || ''
+  ];
+}
+
+// UUIDを生成する関数
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
 }
