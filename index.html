@@ -107,13 +107,16 @@
             <div class="radio-group">
                 <label><input type="radio" name="lunchCancel" value="有" required>有</label>
                 <label><input type="radio" name="lunchCancel" value="無" required checked>無</label>
-
             </div>
         </div>
         <div class="form-group">
             <button type="submit">送信</button>
         </div>
     </form>
+    <div class="loading-overlay" id="loader">
+        <div class="loader"></div>
+        <p>送信中です...</p>
+    </div> <!-- ローディングアニメーション要素 -->
 </div>
 
 </body>

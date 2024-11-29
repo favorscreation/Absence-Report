@@ -13,6 +13,28 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
+    // スプレッドシート名の取得とタイトルへの表示
+    fetchSpreadsheetName(spreadsheetId, deploymentId);
+
+    function fetchSpreadsheetName(spreadsheetId, deploymentId) {
+        const url = `https://script.google.com/macros/s/${deploymentId}/exec?spreadsheetId=${spreadsheetId}`;
+        
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.name) {
+                    document.title = data.name; // HTMLのタイトルを更新
+                    const titleElement = document.querySelector('h1');
+                    if (titleElement) {
+                        titleElement.textContent = data.name; // フォームのタイトルを更新
+                    }
+                } else {
+                    console.error('スプレッドシートの名前を取得できませんでした。', data.error);
+                }
+            })
+            .catch(error => console.error('エラーが発生しました。', error));
+    }
+
     if (isDebugMode) {
         const fields = {
             responsiblePerson: 'デバッグ担当者',
@@ -64,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const form = document.getElementById('attendanceForm');
     const submitButton = form.querySelector('button[type="submit"]');
+    const loader = document.getElementById('loader');
     let isSubmitting = false;
 
     form.addEventListener('submit', function (e) {
@@ -72,10 +95,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isSubmitting) return;
         isSubmitting = true;
         submitButton.disabled = true;
+        loader.style.display = 'block'; // ローディングアニメーションを表示
 
         if (!validateForm()) {
             isSubmitting = false;
             submitButton.disabled = false;
+            loader.style.display = 'none'; // ローディングアニメーションを非表示
             return;
         }
 
@@ -109,12 +134,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 form.reset();
                 isSubmitting = false;
                 submitButton.disabled = false;
+                loader.style.display = 'none'; // ローディングアニメーションを非表示
             })
             .catch((e) => {
                 console.error('送信エラーが発生しました。', e);
                 alert('送信エラーが発生しました。');
                 isSubmitting = false;
                 submitButton.disabled = false;
+                loader.style.display = 'none'; // ローディングアニメーションを非表示
             });
     });
 
