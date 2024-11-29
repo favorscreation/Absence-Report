@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // 連絡者の選択に応じて表示するフィールドを切り替え
     const contactPerson = document.getElementById('contactPerson');
     if (contactPerson) {
         contactPerson.addEventListener('change', function() {
@@ -14,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // GASデプロイIDの設定
     const deploymentIdInput = document.getElementById('deploymentId');
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -34,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let isSubmitting = false;
 
     if (isDebugMode) {
-        // デバッグモードならすべてのフィールドにデフォルト値を設定
         const fields = {
             responsiblePerson: 'デバッグ担当者',
             userName: 'デバッグ利用者',
@@ -69,12 +66,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         if (isSubmitting) return;
         isSubmitting = true;
         submitButton.disabled = true;
+
+        const spinner = document.createElement('div');
+        spinner.className = 'spinner';
+        submitButton.textContent = '送信中...';
+        submitButton.appendChild(spinner);
 
         if (!validateForm()) {
             isSubmitting = false;
@@ -93,27 +95,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const url = `https://script.google.com/macros/s/${data.deploymentId}/exec`;
 
-        fetch(url, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(response => {
-            alert('データが送信されました！');
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error('ネットワーク応答が正常ではありません。');
+            }
+
+            const responseData = await response.json();
+            console.log('サーバーレスポンス:', responseData);
+            
+            if (responseData.result === 'success') {
+                alert('データが送信されました！');
+            } else if (responseData.result === 'duplicate') {
+                alert('重複送信が検出されました。');
+            } else {
+                throw new Error(`サーバーエラー: ${responseData.message}`);
+            }
+
+        } catch (error) {
+            console.error('エラー:', error);
+            alert(`データ送信中にエラーが発生しました: ${error.message}`);
+        } finally {
             isSubmitting = false;
             submitButton.disabled = false;
             form.reset();
-        }).catch(error => {
-            console.error('エラー:', error);
-            isSubmitting = false;
-            submitButton.disabled = false;
-        });
+        }
     });
 
-
-    // 相談支援・助言の入力に応じて支援時刻のrequired属性を動的に設定
     const supportAdvice1 = document.getElementById('supportAdvice1');
     const supportTime1 = document.getElementById('supportTime1');
     const supportAdvice2 = document.getElementById('supportAdvice2');
