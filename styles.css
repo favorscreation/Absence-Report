@@ -9,46 +9,24 @@ body {
     background-color: #ffffff;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 1200px;
+    max-width: 800px;
     margin: 0 auto;
     border-radius: 8px;
-    position: relative;
 }
 
 h1 {
     text-align: center;
     color: #333333;
-    position: relative;
-}
-
-.deployment-id {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    align-items: center;
-    font-size: 0.8em;
-}
-
-.deployment-id label {
-    margin-right: 5px;
-}
-
-.deployment-id input[readonly] {
-    background-color: #e9e9e9;
-    color: #a9a9a9;
-    pointer-events: none;
 }
 
 .form-group {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
-    gap: 10px;
 }
 
 .form-group label {
-    flex: 0 0 200px;
+    flex: 0 0 150px;
     font-weight: bold;
 }
 
@@ -62,26 +40,9 @@ h1 {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-    max-width: calc(100% - 220px);
 }
 
-.form-group input[type="datetime-local"] {
-    width: 180px;
-}
-
-.form-group input[type="time"],
-.form-group input[type="datetime-local"],
-.form-group input[type="date"] {
-    flex: unset;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-.form-group textarea#currentSituation,
-.form-group textarea#supportAdvice1,
-.form-group textarea#supportAdvice2 {
+.form-group textarea {
     height: 100px;
 }
 
@@ -94,17 +55,13 @@ h1 {
 }
 
 .radio-group {
-    display: table-row-group;
+    display: flex;
+    flex-wrap: wrap;
     gap: 10px;
-    align-items: center;
 }
 
 .radio-group label {
-    white-space: nowrap;
-}
-
-.radio-group input[type="radio"]:checked + label {
-    color: #4CAF50; /* 選択されたラジオボタンのラベル色 */
+    margin-bottom: 5px;
 }
 
 button {
@@ -114,27 +71,24 @@ button {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    width: 100%;
 }
 
 button:hover {
     background-color: #45a049;
 }
 
-@keyframes spinner {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.deployment-id, .sheet-id, .sheet-gid {
+    margin-bottom: 10px;
 }
 
-.spinner {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    border: 2px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    border-top-color: #000;
-    animation: spinner 0.6s linear infinite;
-    margin-left: 10px;
-    vertical-align: middle;
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
-
