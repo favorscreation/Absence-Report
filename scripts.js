@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const params = new URLSearchParams(window.location.search);
+    const role = params.get('role') || 'user'; // role パラメータを取得。デフォルトは 'user'
     const isDebugMode = params.get('debug') === 'true';
 
     const spreadsheetId = params.get('spreadsheetsID');
@@ -13,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    // スプレッドシート名の取得とタイトルへの表示
     fetchSpreadsheetName(spreadsheetId, deploymentId);
 
     function fetchSpreadsheetName(spreadsheetId, deploymentId) {
@@ -23,10 +23,10 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 if (data.name) {
-                    document.title = data.name; // HTMLのタイトルを更新
+                    document.title = data.name;
                     const titleElement = document.querySelector('h1');
                     if (titleElement) {
-                        titleElement.textContent = data.name; // フォームのタイトルを更新
+                        titleElement.textContent = data.name;
                     }
                 } else {
                     console.error('スプレッドシートの名前を取得できませんでした。', data.error);
@@ -35,14 +35,28 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('エラーが発生しました。', error));
     }
 
+    // 役割ごとに表示項目を変える
+    if (role === 'staff') {
+        document.querySelectorAll('.user-only').forEach(el => el.style.display = 'block');
+    } else {
+        document.querySelectorAll('.staff-only').forEach(el => el.style.display = 'none');
+        // userロールの場合のみ必須に設定
+        document.querySelectorAll('.user-only input, .user-only select, .user-only textarea').forEach(el => {
+            if (el.id !== 'otherContactPerson') {
+                el.required = true;
+            }
+        });
+    }
+
     if (isDebugMode) {
         const fields = {
             responsiblePerson: 'デバッグ担当者',
             userName: 'デバッグ利用者',
             contactDateTime: '2024-12-01T08:00',
             contactPerson: '本人',
+            otherContactPerson: 'デバッグその他',
             contactMethod: '電話',
-            category: '欠席',
+            category: '欠勤',
             reason: '体調不良',
             startDateTime: '2024-12-01T09:00',
             endDateTime: '2024-12-01T17:00',
@@ -51,9 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
             supportTime2: '18:00',
             supportAdvice2: '次回の通院日を確認',
             currentSituation: '朝から微熱が続いている',
-            nextVisitDate: '2024-12-02',
-            additionalSupport: '有',
-            lunchCancel: '無'
+            nextVisitDate: '2024-12-02'
         };
 
         for (let [id, value] of Object.entries(fields)) {
@@ -68,6 +80,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.warn(`Element with name or ID ${id} not found`);
             }
         }
+
+        const contactPersonElement = document.getElementById('contactPerson');
+        const otherContactPersonElement = document.getElementById('otherContactPerson');
+        if (contactPersonElement.value === 'その他') {
+            otherContactPersonElement.style.display = 'block';
+        }
     }
 
     const contactPerson = document.getElementById('contactPerson');
@@ -76,10 +94,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const otherContactPerson = document.getElementById('otherContactPerson');
             if (this.value === 'その他') {
                 otherContactPerson.style.display = 'block';
-                otherContactPerson.required = true;
+                otherContactPerson.setAttribute('required', 'required');
             } else {
                 otherContactPerson.style.display = 'none';
-                otherContactPerson.required = false;
+                otherContactPerson.removeAttribute('required');
             }
         });
     }
@@ -95,12 +113,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isSubmitting) return;
         isSubmitting = true;
         submitButton.disabled = true;
-        loader.style.display = 'block'; // ローディングアニメーションを表示
+        loader.style.display = 'block';
 
         if (!validateForm()) {
             isSubmitting = false;
             submitButton.disabled = false;
-            loader.style.display = 'none'; // ローディングアニメーションを非表示
+            loader.style.display = 'none';
             return;
         }
 
@@ -108,12 +126,24 @@ document.addEventListener('DOMContentLoaded', function () {
         const params = new URLSearchParams();
 
         formData.forEach((value, key) => {
-            params.append(key, value);
+            const inputElement = document.querySelector(`[name="${key}"]`);
+            if ((inputElement && inputElement.closest('.staff-only') && inputElement.closest('.staff-only').style.display !== 'none') || 
+                (inputElement && inputElement.closest('.user-only') && inputElement.closest('.user-only').style.display !== 'none') || 
+                (inputElement && !inputElement.closest('.staff-only') && !inputElement.closest('.user-only'))) {
+                params.append(key, value);
+            }
         });
+
+        if (document.getElementById('contactPerson').value === 'その他') {
+            const otherContactValue = document.getElementById('otherContactPerson').value;
+            params.set('contactPerson', otherContactValue);
+        }
 
         params.append('spreadsheetsID', spreadsheetId);
         params.append('spreadsheetsGID', sheetIdentifier);
         params.append('sheetType', identifierType);
+
+        console.log('送信内容:', Object.fromEntries(params)); // 送信内容をコンソールに出力
 
         const url = `https://script.google.com/macros/s/${deploymentId}/exec`;
 
@@ -130,18 +160,18 @@ document.addEventListener('DOMContentLoaded', function () {
             .then((response) => response.json())
             .then((result) => {
                 alert('データが送信されました！');
-                console.log(result); // レスポンス結果を表示
+                console.log(result);
                 form.reset();
                 isSubmitting = false;
                 submitButton.disabled = false;
-                loader.style.display = 'none'; // ローディングアニメーションを非表示
+                loader.style.display = 'none';
             })
             .catch((e) => {
                 console.error('送信エラーが発生しました。', e);
                 alert('送信エラーが発生しました。');
                 isSubmitting = false;
                 submitButton.disabled = false;
-                loader.style.display = 'none'; // ローディングアニメーションを非表示
+                loader.style.display = 'none';
             });
     });
 

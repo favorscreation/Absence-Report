@@ -62,7 +62,6 @@ h1 {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-    max-width: calc(100% - 220px);
 }
 
 .form-group input[type="datetime-local"] {
@@ -154,4 +153,13 @@ button:hover {
     margin-top: 20px;
     font-size: 18px;
     color: #333;
+}
+
+.staff-only {
+    display: none;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
 }
