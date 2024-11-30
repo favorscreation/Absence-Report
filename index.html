@@ -3,37 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>欠席・遅刻・早退 連絡票</title>
+    <title>欠勤・遅刻・早退 届け</title>
     <link rel="stylesheet" href="styles.css">
     <script src="scripts.js" defer></script>
 </head>
 <body>
-
 <div class="container">
-    <h1>欠席・遅刻・早退 連絡票</h1>
+    <h1>欠勤・遅刻・早退 届け</h1>
     <form id="attendanceForm" method="post">
-        <div class="form-group">
+        <div class="form-group staff-only">
             <label for="responsiblePerson">担当者：</label>
-            <input type="text" id="responsiblePerson" name="responsiblePerson" placeholder="例: 山田太郎" required>
+            <input type="text" id="responsiblePerson" name="responsiblePerson" placeholder="例: 山田太郎">
         </div>
-        <div class="form-group">
+        <div class="form-group user-only">
             <label for="userName">利用者氏名：</label>
             <input type="text" id="userName" name="userName" placeholder="例: 佐藤花子" required>
         </div>
-         <div class="form-group">
+        <div class="form-group user-only">
             <label for="contactDateTime">連絡日時：</label>
             <input type="datetime-local" id="contactDateTime" name="contactDateTime" required>
         </div>
-        <div class="form-group">
+        <div class="form-group user-only">
             <label for="contactPerson">連絡者：</label>
-            <select id="contactPerson" name="contactPerson" required>
-                <option value="本人" selected>本人</option>
-                <option value="家族">家族</option>
-                <option value="その他">その他</option>
-            </select>
-            <input type="text" id="otherContactPerson" name="otherContactPerson" style="display:none;" placeholder="その他の連絡者">
+            <div class="input-group">
+                <select id="contactPerson" name="contactPerson" required>
+                    <option value="本人" selected>本人</option>
+                    <option value="家族">家族</option>
+                    <option value="その他">その他</option>
+                </select>
+                <input type="text" id="otherContactPerson" name="otherContactPerson" style="display:none;" placeholder="その他の連絡者">
+            </div>
         </div>
-        <div class="form-group">
+        <div class="form-group user-only">
             <label for="contactMethod">連絡方法：</label>
             <div class="radio-group">
                 <label><input type="radio" name="contactMethod" value="電話" required checked>電話</label>
@@ -43,15 +44,15 @@
                 <label><input type="radio" name="contactMethod" value="その他" required>その他</label>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group user-only">
             <label for="category">種別：</label>
             <select id="category" name="category" required>
-                <option value="欠席" selected>欠席</option>
+                <option value="欠勤" selected>欠勤</option>
                 <option value="遅刻">遅刻</option>
                 <option value="早退">早退</option>
             </select>
         </div>
-        <div class="form-group">
+        <div class="form-group user-only">
             <label for="reason">事由：</label>
             <div class="radio-group">
                 <label><input type="radio" name="reason" value="体調不良" required checked>体調不良</label>
@@ -59,62 +60,60 @@
                 <label><input type="radio" name="reason" value="その他" required>その他</label>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group user-only">
             <label for="startDateTime">開始日時：</label>
-            <input type="datetime-local" id="startDateTime" name="startDateTime" required>
+            <input type="datetime-local" id="startDateTime" name="startDateTime">
         </div>
-        <div class="form-group">
+        <div class="form-group user-only">
             <label for="endDateTime">終了日時：</label>
-            <input type="datetime-local" id="endDateTime" name="endDateTime" required>
+            <input type="datetime-local" id="endDateTime" name="endDateTime">
         </div>
-        <div class="group">
-            <div class="form-group">
-                <label for="supportTime1">支援時刻1：</label>
-                <input type="time" id="supportTime1" name="supportTime1">
-            </div>
-            <div class="form-group">
-                <label for="supportAdvice1">相談支援・助言1：</label>
-                <textarea id="supportAdvice1" name="supportAdvice1" placeholder="例: 体調管理に注意するように助言" oninput="toggleRequired(this, 'supportTime1')"></textarea>
-            </div>
+        <div class="form-group staff-only">
+            <label for="supportTime1">支援時刻1：</label>
+            <input type="time" id="supportTime1" name="supportTime1">
         </div>
-        <div class="group">
-            <div class="form-group">
-                <label for="supportTime2">支援時刻2：</label>
-                <input type="time" id="supportTime2" name="supportTime2">
-            </div>
-            <div class="form-group">
-                <label for="supportAdvice2">相談支援・助言2：</label>
-                <textarea id="supportAdvice2" name="supportAdvice2" placeholder="例: 次回の通院日を確認" oninput="toggleRequired(this, 'supportTime2')"></textarea>
-            </div>
+        <div class="form-group staff-only">
+            <label for="supportAdvice1">相談支援・助言1：</label>
+            <textarea id="supportAdvice1" name="supportAdvice1" placeholder="例: 体調管理に注意するように助言" oninput="toggleRequired(this, 'supportTime1')"></textarea>
         </div>
-        <div class="form-group">
+        <div class="form-group staff-only">
+            <label for="supportTime2">支援時刻2：</label>
+            <input type="time" id="supportTime2" name="supportTime2">
+        </div>
+        <div class="form-group staff-only">
+            <label for="supportAdvice2">相談支援・助言2：</label>
+            <textarea id="supportAdvice2" name="supportAdvice2" placeholder="例: 次回の通院日を確認" oninput="toggleRequired(this, 'supportTime2')"></textarea>
+        </div>
+        <div class="form-group user-only">
             <label for="currentSituation">当日の状況：</label>
             <textarea id="currentSituation" name="currentSituation" placeholder="例: 朝から微熱が続いている" required></textarea>
         </div>
-        <div class="form-group">
+        <div class="form-group staff-only">
             <label for="nextVisitDate">次回通所日：</label>
-            <input type="date" id="nextVisitDate" name="nextVisitDate" required>
+            <input type="date" id="nextVisitDate" name="nextVisitDate">
         </div>
-        <div class="form-group">
+        <div class="form-group staff-only">
             <label for="additionalSupport">加算の有無：</label>
             <div class="radio-group">
-                <label><input type="radio" name="additionalSupport" value="有" required>有</label>
-                <label><input type="radio" name="additionalSupport" value="無" required checked>無</label>
+                <label><input type="radio" name="additionalSupport" value="有">有</label>
+                <label><input type="radio" name="additionalSupport" value="無" checked>無</label>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group staff-only">
             <label for="lunchCancel">昼食キャンセル負担：</label>
             <div class="radio-group">
-                <label><input type="radio" name="lunchCancel" value="有" required>有</label>
-                <label><input type="radio" name="lunchCancel" value="無" required checked>無</label>
-
+                <label><input type="radio" name="lunchCancel" value="有">有</label>
+                <label><input type="radio" name="lunchCancel" value="無" checked>無</label>
             </div>
         </div>
         <div class="form-group">
             <button type="submit">送信</button>
         </div>
     </form>
+    <div class="loading-overlay" id="loader">
+        <div class="loader"></div>
+        <p>送信中です...</p>
+    </div>
 </div>
-
 </body>
 </html>
