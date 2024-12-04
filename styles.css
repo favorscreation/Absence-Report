@@ -1,138 +1,170 @@
+/* 既存のスタイル */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
 }
 
 .container {
-    background-color: #ffffff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 1200px;
-    margin: 0 auto;
-    border-radius: 8px;
-    position: relative;
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 8px;
+  position: relative;
 }
 
 h1 {
-    text-align: center;
-    color: #333333;
-    position: relative;
+  text-align: center;
+  color: #333333;
+  position: relative;
 }
 
 .form-group {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  gap: 10px;
 }
 
 .form-group label {
-    flex: 0 0 200px;
-    font-weight: bold;
+  flex: 0 0 200px;
+  font-weight: bold;
 }
 
-.form-group input[type="text"],
-.form-group input[type="datetime-local"],
-.form-group input[type="date"],
+.form-group input[type='text'],
+.form-group input[type='datetime-local'],
+.form-group input[type='date'],
 .form-group select,
 .form-group textarea {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
-.form-group input[type="datetime-local"] {
-    width: 180px;
+.form-group input[type='datetime-local'] {
+  width: 180px;
 }
 
-.form-group input[type="time"],
-.form-group input[type="datetime-local"],
-.form-group input[type="date"] {
-    flex: unset;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+.form-group input[type='time'],
+.form-group input[type='datetime-local'],
+.form-group input[type='date'] {
+  flex: unset;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 .form-group textarea#currentSituation,
 .form-group textarea#supportAdvice1,
 .form-group textarea#supportAdvice2 {
-    height: 100px;
+  height: 100px;
 }
 
 .radio-group {
-    display: block;
-    gap: 10px;
-    align-items: center;
+  display: block;
+  gap: 10px;
+  align-items: center;
 }
 
 .radio-group label {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
-.radio-group input[type="radio"]:checked + label {
-    color: #4CAF50; /* 選択されたラジオボタンのラベル色 */
+.radio-group input[type='radio']:checked + label {
+  color: #4caf50; /* 選択されたラジオボタンのラベル色 */
 }
 
 button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+button#setNow {
+  width: auto;
 }
 
 button:hover {
-    background-color: #45a049;
+  background-color: #45a049;
 }
 
 .loading-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.8);
-    z-index: 1000;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 1000;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .loading-overlay .loader {
-    border: 16px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 16px solid #3498db;
-    width: 120px;
-    height: 120px;
-    animation: spin 2s linear infinite;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-overlay p {
-    margin-top: 20px;
-    font-size: 18px;
-    color: #333;
+  margin-top: 20px;
+  font-size: 18px;
+  color: #333;
 }
 
 .staff-only {
-    display: none;
+  display: none;
 }
 
 .input-group {
-    display: flex;
+  display: flex;
+  flex-direction: column;
+}
+
+/* スマホ用のスタイル */
+@media (max-width: 767px) {
+  .form-group {
+    display: grid;
     flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-group#contactDateTime {
+    display: block;
+  }
+
+  .form-group label {
+    margin-bottom: 5px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: auto;
+  }
 }
