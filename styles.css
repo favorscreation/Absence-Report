@@ -169,10 +169,18 @@ button:hover {
   .form-group input[type='text'],
   .form-group input[type='datetime-local'],
   .form-group input[type='date'],
+  .form-group input[type='time'],
   .form-group select,
   .form-group textarea {
     width: 100%;
     padding: 12px; /* パディングを調整して入力フィールドを大きくする */
     font-size: 16px; /* フォントサイズを調整して視認性を向上 */
+  }
+
+  .form-group textarea#currentSituation,
+  .form-group textarea#supportAdvice1,
+  .form-group textarea#supportAdvice2 {
+    flex: auto;
+    height: 100px;
   }
 }
