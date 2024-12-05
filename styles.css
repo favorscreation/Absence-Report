@@ -91,7 +91,7 @@ button {
 }
 
 button#setNow {
-  width: auto;
+  width: 180px;
 }
 
 button:hover {
@@ -154,7 +154,7 @@ button:hover {
     align-items: flex-start;
   }
 
-  .form-group#contactDateTime-P {
+  .form-group#contactDateTime {
     display: block;
   }
 
