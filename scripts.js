@@ -3,11 +3,10 @@ let isSubmitting = false;
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const role = urlParams.get('role') || 'user';
-    const isDebugMode = urlParams.get('debug') === 'true';
 
-    const spreadsheetId = urlParams.get('spreadsheetsID');
-    const sheetIdentifier = urlParams.get('spreadsheetsGID');
-    const deploymentId = urlParams.get('deploymentId');
+    const spreadsheetId = urlParams.get('spreadsheetId');
+    const sheetIdentifier = urlParams.get('sheetIdentifier');
+    const scriptId = urlParams.get('scriptId');
     const identifierType = urlParams.get('sheetType') || 'gid';
 
     const startDateInput = document.getElementById('startDate');
@@ -15,44 +14,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const startTimeInput = document.getElementById('startTime');
     const endTimeInput = document.getElementById('endTime');
 
-
-    if (!spreadsheetId || !sheetIdentifier || !deploymentId) {
+    if (!spreadsheetId || !sheetIdentifier || !scriptId) {
         console.error("必要なクエリパラメータが不足しています。");
         alert("必要なクエリパラメータが不足しています。URLを確認してください。");
         return;
     }
 
-    fetchSpreadsheetName(spreadsheetId, deploymentId);
+    console.log(spreadsheetId, sheetIdentifier, scriptId, identifierType)
+
+    fetchSpreadsheetName(spreadsheetId, scriptId);
 
     // 役割による表示制御
     if (role === 'staff') {
         document.querySelectorAll('.staff-only').forEach(el => el.style.display = 'block');
     } else {
         document.querySelectorAll('.staff-only').forEach(el => el.style.display = 'none');
-    }
-
-    // デバッグモード
-    if (isDebugMode) {
-        const debugFields = {
-            userName: 'デバッグ利用者',
-            contactDateTime: '2024-12-01T08:00',
-            contactPerson: '本人',
-            otherContactPerson: 'デバッグその他',
-            contactMethod: '電話',
-            category: '欠勤',
-            reason: '体調不良',
-            startDate: '2024-12-01',
-            startTime: '09:00',
-            endDate: '2024-12-01',
-            endTime: '17:00',
-            supportTime1: '08:00',
-            supportAdvice1: '体調管理に注意するよう助言',
-            supportTime2: '18:00',
-            supportAdvice2: '次回の通院日を確認',
-            currentSituation: '朝から微熱が続いている',
-            nextVisitDate: '2024-12-02'
-        };
-        fillFormWithData(debugFields);
     }
 
     // イベントリスナー
@@ -104,8 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 関数定義
-    function fetchSpreadsheetName(spreadsheetId, deploymentId) {
-        const url = `https://script.google.com/macros/s/${deploymentId}/exec?spreadsheetId=${spreadsheetId}`;
+    function fetchSpreadsheetName(spreadsheetId, scriptId) {
+        const url = `https://script.google.com/macros/s/${scriptId}/exec?spreadsheetId=${spreadsheetId}`;
         fetch(url)
             .then(response => response.json())
             .then(data => {
@@ -175,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
 
-
         const category = document.getElementById('category').value;
         if (category !== '欠勤') {
             const startTime = document.getElementById('startTime').value;
@@ -216,7 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const endDate = document.getElementById('endDate').value;
         const endTime = document.getElementById('endTime').value || "";
 
-
         if (startDate) {
             params.append('startDateTime', `${startDate}T${startTime}`);
         }
@@ -227,8 +201,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('contactPerson').value === 'その他') {
             params.set('contactPerson', document.getElementById('otherContactPerson').value);
         }
-        params.append('spreadsheetsID', spreadsheetId);
-        params.append('spreadsheetsGID', sheetIdentifier);
+        params.append('spreadsheetId', spreadsheetId);
+        params.append('sheetIdentifier', sheetIdentifier);
         params.append('sheetType', identifierType);
         return params;
     }
@@ -238,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleLoader(true);
 
         console.log('送信内容:', Object.fromEntries(params));
-        const url = `https://script.google.com/macros/s/${deploymentId}/exec`;
+        const url = `https://script.google.com/macros/s/${scriptId}/exec`;
 
         fetch(url, {
             method: 'POST',
@@ -250,6 +224,9 @@ document.addEventListener('DOMContentLoaded', () => {
         })
             .then(response => response.json())
             .then(result => {
+                if (result.error) {
+                    throw new Error(result.error);
+                }
                 alert('データが送信されました！');
                 console.log(result);
                 form.reset();
@@ -258,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => {
                 console.error('送信エラーが発生しました。', error);
-                alert('送信エラーが発生しました。');
+                alert(`送信エラーが発生しました: ${error.message}`);
             })
             .finally(() => {
                 isSubmitting = false;
@@ -269,24 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleRequired(adviceInput, timeInputId) {
         const timeInput = document.getElementById(timeInputId);
         timeInput.required = adviceInput.value.trim() !== '';
-    }
-
-    function fillFormWithData(data) {
-        for (const [id, value] of Object.entries(data)) {
-            const element = document.querySelector(`[name="${id}"]`) || document.getElementById(id);
-            if (!element) {
-                console.warn(`nameまたはIDが "${id}" の要素が見つかりません`);
-                continue;
-            }
-            if (element.type === "radio" || element.type === "checkbox") {
-                element.checked = element.value === value;
-            } else {
-                element.value = value;
-            }
-        }
-        if (document.getElementById('contactPerson').value === 'その他') {
-            document.getElementById('otherContactPerson').style.display = 'block';
-        }
     }
 
     function toggleLoader(show) {

@@ -125,13 +125,13 @@ function doGet(e) {
 
 function doPost(e) {
   // パラメータのバリデーションを追加
-  const { spreadsheetsID, spreadsheetsGID, sheetType } = e.parameter;
-  if (!spreadsheetsID || !spreadsheetsGID || !sheetType) {
+  const { spreadsheetsId, sheetIdentifier, sheetType } = e.parameter;
+  if (!spreadsheetsId || !sheetIdentifier || !sheetType) {
     return createErrorResponse("必須パラメータが不足しています。");
   }
 
   const requestBody = handleContactPerson(e.parameter);
-  return doPostLibrary(requestBody, spreadsheetsID, spreadsheetsGID, sheetType);
+  return doPostLibrary(requestBody, spreadsheetsId, sheetIdentifier, sheetType);
 }
 
 function handleContactPerson(params) {

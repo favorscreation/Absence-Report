@@ -183,4 +183,8 @@ button:hover {
     flex: auto;
     height: 100px;
   }
+
+  .staff-only {
+    display: none;
+  }
 }
