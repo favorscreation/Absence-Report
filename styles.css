@@ -1,89 +1,77 @@
-/* 既存のスタイル */
+/* 全体的なスタイル */
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
   margin: 0;
-  padding: 20px;
+  padding: 10px; /* パディングを小さく */
+  box-sizing: border-box;
 }
 
 .container {
   background-color: #ffffff;
-  padding: 20px;
+  padding: 15px; /* パディングを小さく */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: 1200px;
+  max-width: 767px; /* 画面幅に合わせて最大幅を調整 */
   margin: 0 auto;
   border-radius: 8px;
-  position: relative;
 }
 
 h1 {
   text-align: center;
   color: #333333;
-  position: relative;
 }
 
 #office {
   text-align: right;
   margin-right: 10px;
-  height: 1rem;
 }
 
 .form-group {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-  gap: 10px;
+  margin-bottom: 10px; /* マージンを小さく */
 }
 
-.form-group label {
-  flex: 0 0 200px;
+label {
+  display: block; /* ラベルをブロックレベルに */
+  margin-bottom: 5px;
   font-weight: bold;
 }
 
-.form-group input[type='text'],
-.form-group input[type='datetime-local'],
-.form-group input[type='date'],
-.form-group select,
-.form-group textarea {
-  flex: 1;
-  padding: 10px;
+input[type='text'],
+input[type='datetime-local'],
+input[type='date'],
+input[type='time'],
+select,
+textarea {
+  width: 100%;
+  padding: 8px; /* パディングを調整 */
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+  font-size: 16px; /* フォントサイズを大きく */
 }
 
-.form-group input[type='datetime-local'] {
-  width: 180px;
-}
-
-.form-group input[type='time'],
-.form-group input[type='datetime-local'],
-.form-group input[type='date'] {
-  flex: unset;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-.form-group textarea#currentSituation,
-.form-group textarea#supportAdvice1,
-.form-group textarea#supportAdvice2 {
-  height: 100px;
+textarea {
+  height: 80px; /* 高さを調整 */
+  resize: vertical; /* 縦方向のサイズ変更のみ許可 */
 }
 
 .radio-group {
   display: block;
+  margin-top: 5px;
+}
+
+.radio-group-horizontal {
+  display: flex;
   gap: 10px;
-  align-items: center;
 }
 
 .radio-group label {
-  white-space: nowrap;
+  display: block; /* ラジオボタンを縦に並べる */
+  margin-bottom: 5px;
 }
 
 .radio-group input[type='radio']:checked + label {
-  color: #4caf50; /* 選択されたラジオボタンのラベル色 */
+  color: #4caf50;
 }
 
 button {
@@ -94,16 +82,10 @@ button {
   border-radius: 4px;
   cursor: pointer;
   width: 100%;
+  margin-top: 10px; /* ボタンの上下にスペース */
 }
 
-button#setNow {
-  width: 180px;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
+/* 読み込み中のオーバーレイ */
 .loading-overlay {
   display: none;
   position: fixed;
@@ -147,50 +129,19 @@ button:hover {
   display: none;
 }
 
-.input-group {
-  display: flex;
-  flex-direction: column;
-}
-
-/* スマホ用のスタイル */
+/* レスポンシブデザインの修正 */
 @media (max-width: 767px) {
   .container {
-    max-width: 100%;
+    max-width: 95%; /* 画面幅のほぼ全体に */
     padding: 10px;
   }
 
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-  }
-
-  .form-group label {
-    flex: 0 0 30px;
-    width: 100%;
-    margin-bottom: 5px;
-  }
-
-  .form-group input[type='text'],
-  .form-group input[type='datetime-local'],
-  .form-group input[type='date'],
-  .form-group input[type='time'],
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    padding: 12px; /* パディングを調整して入力フィールドを大きくする */
-    font-size: 16px; /* フォントサイズを調整して視認性を向上 */
-  }
-
-  .form-group textarea#currentSituation,
-  .form-group textarea#supportAdvice1,
-  .form-group textarea#supportAdvice2 {
-    flex: auto;
-    height: 100px;
-  }
-
-  .staff-only {
-    display: none;
+  input[type='text'],
+  input[type='datetime-local'],
+  input[type='date'],
+  input[type='time'],
+  select,
+  textarea {
+    font-size: 16px;
   }
 }

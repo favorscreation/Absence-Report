@@ -36,10 +36,10 @@
             </div>
             <div class="form-group">
                 <label for="contactMethod">連絡方法：</label>
-                <div class="radio-group">
+                <div class="radio-group radio-group-horizontal">
+                    <label><input type="radio" name="contactMethod" value="チャット" required checked>チャット</label>
                     <label><input type="radio" name="contactMethod" value="口頭" required>口頭</label>
-                    <label><input type="radio" name="contactMethod" value="チャット" required>チャット</label>
-                    <label><input type="radio" name="contactMethod" value="電話" required checked>電話</label>
+                    <label><input type="radio" name="contactMethod" value="電話" required>電話</label>
                     <label><input type="radio" name="contactMethod" value="その他" required>その他</label>
                 </div>
             </div>
@@ -51,9 +51,9 @@
                     <option value="早退">早退</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group ">
                 <label for="reason">事由：</label>
-                <div class="radio-group">
+                <div class="radio-group radio-group-horizontal">
                     <label><input type="radio" name="reason" value="体調不良" required checked>体調不良</label>
                     <label><input type="radio" name="reason" value="一般通院" required>一般通院</label>
                     <label><input type="radio" name="reason" value="その他" required>その他</label>
@@ -98,7 +98,7 @@
             </div>
             <div class="form-group staff-only">
                 <label for="additionalSupport">加算の有無：</label>
-                <div class="radio-group">
+                <div class="radio-group radio-group-horizontal">
                     <label><input type="radio" name="additionalSupport" value="有">有り</label>
                     <label><input type="radio" name="additionalSupport" value="無">無し</label>
                     <label><input type="radio" name="additionalSupport" value="" checked>未選択</label>
