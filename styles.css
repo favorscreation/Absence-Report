@@ -24,6 +24,7 @@ h1 {
 #office {
   text-align: right;
   margin-right: 10px;
+  height: 1rem;
 }
 
 .form-group {
