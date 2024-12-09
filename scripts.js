@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 役割による表示制御
     if (role === 'staff') {
-        document.querySelectorAll('.staff-only').forEach(el => el.style.display = 'block');
+        document.querySelectorAll('.staff-only').forEach(el => el.style.display = 'flex');
     } else {
         document.querySelectorAll('.staff-only').forEach(el => el.style.display = 'none');
     }
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 if (data.name) {
                     document.title = data.name;
-                    document.querySelector('h1').textContent = data.name;
+                    document.getElementById('office').textContent = data.name;
                 } else {
                     console.error('スプレッドシートの名前を取得できませんでした。', data.error);
                 }

@@ -11,6 +11,7 @@
 <body>
     <div class="container">
         <h1>欠勤・遅刻・早退 届け</h1>
+        <p id="office"></p>
         <form id="attendanceForm" method="post">
             <div class="form-group">
                 <label for="userName">利用者氏名：</label>
@@ -36,10 +37,9 @@
             <div class="form-group">
                 <label for="contactMethod">連絡方法：</label>
                 <div class="radio-group">
-                    <label><input type="radio" name="contactMethod" value="電話" required checked>電話</label>
                     <label><input type="radio" name="contactMethod" value="口頭" required>口頭</label>
-                    <label><input type="radio" name="contactMethod" value="メール" required>メール</label>
                     <label><input type="radio" name="contactMethod" value="チャット" required>チャット</label>
+                    <label><input type="radio" name="contactMethod" value="電話" required checked>電話</label>
                     <label><input type="radio" name="contactMethod" value="その他" required>その他</label>
                 </div>
             </div>
@@ -88,26 +88,28 @@
                     oninput="toggleRequired(this, 'supportTime2')"></textarea>
             </div>
             <div class="form-group">
+                <label for="nextVisitDate">次回通所予定日：</label>
+                <input type="date" id="nextVisitDate" name="nextVisitDate" required>
+            </div>
+            <div class="form-group">
                 <label for="currentSituation">当日の状況：</label>
                 <textarea id="currentSituation" name="currentSituation" placeholder="例: 朝から微熱が続いている"
                     required></textarea>
             </div>
             <div class="form-group staff-only">
-                <label for="nextVisitDate">次回通所日：</label>
-                <input type="date" id="nextVisitDate" name="nextVisitDate">
-            </div>
-            <div class="form-group staff-only">
                 <label for="additionalSupport">加算の有無：</label>
                 <div class="radio-group">
-                    <label><input type="radio" name="additionalSupport" value="有">有</label>
-                    <label><input type="radio" name="additionalSupport" value="無">無</label>
+                    <label><input type="radio" name="additionalSupport" value="有">有り</label>
+                    <label><input type="radio" name="additionalSupport" value="無">無し</label>
+                    <label><input type="radio" name="additionalSupport" value="" checked>未選択</label>
                 </div>
             </div>
             <div class="form-group staff-only">
                 <label for="lunchCancel">昼食キャンセル負担：</label>
                 <div class="radio-group">
-                    <label><input type="radio" name="lunchCancel" value="有">有</label>
-                    <label><input type="radio" name="lunchCancel" value="無">無</label>
+                    <label><input type="radio" name="lunchCancel" value="有">有り</label>
+                    <label><input type="radio" name="lunchCancel" value="無">無し</label>
+                    <label><input type="radio" name="lunchCancel" value="" checked>未選択</label>
                 </div>
             </div>
             <div class="form-group">
